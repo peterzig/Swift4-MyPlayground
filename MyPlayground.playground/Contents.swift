@@ -436,4 +436,82 @@ func getNames() -> [String] {
 
 var namezzzz = getNames()
 
+func getTeam() -> (team: String, wins: Int, percent: Double) {
+    let retTuple = ("Red Sox", 99, 0.611)
+    return retTuple
+}
+
+var t = getTeam()
+print("\(t.team) had \(t.wins) wins and \(t.percent) percent of loses")
+
+func getName() -> String? {
+    return nil
+}
+
+func getTeam2(id: Int?) -> (team:String, wins:Int, percent:Double)? {
+    if id == 1 {
+        return ("Red Sox", 99, 0.611)
+    }
+    return nil
+}
+
+func getTeam3() -> (team: String, wins: Int, percent: Double?) {
+    let retTuple: (String, Int, Double?) = ("Red Sox", 99, nil)
+    return retTuple
+}
+
+func winPercentage(team: String, wins: Int, loses: Int) -> Double{
+    return Double(wins) / Double(wins + loses)
+}
+
+var per = winPercentage(team: "Red Sox", wins: 99, loses: 63)
+
+
+// Variadic parameter
+/*func sayHello4(greeting: String, names: String...) {
+    for name in names {
+        print("\(greeting) \(name)")
+    }
+}
+
+sayHello4(greeting: "Hello", names: "Jon", "Peter")
+*/
+// Inout parameter
+func reverse(first: inout String, second: inout String) {
+    let temp = first
+    first = second
+    second = temp
+}
+
+var one = "One"
+var two = "Two"
+reverse(first: &one, second: &two)
+print("one: \(one) two: \(two)")
+
+// Summary - IP Validator
+func isValidIP(ipAddr: String?) -> Bool {
+    guard let ipAddr = ipAddr else {
+        return false
+    }
+    let octets = ipAddr.characters.split { $0 == "."}.map{String($0)}
+    guard octets.count == 4 else {
+        return false
+    }
+    for octet in octets {
+        guard validOctet(octet: octet) else {
+            return false
+        }
+    }
+    return true
+}
+
+func validOctet(octet: String) -> Bool {
+    guard let num = Int(String(octet)), num>=0 && num<256 else{
+        return false
+    }
+    return true
+}
+
+isValidIP(ipAddr: "127.0.0.1")
+isValidIP(ipAddr: "256.123.0.239")
 

@@ -515,3 +515,209 @@ func validOctet(octet: String) -> Bool {
 isValidIP(ipAddr: "127.0.0.1")
 isValidIP(ipAddr: "256.123.0.239")
 
+
+//Classes
+
+struct EmployeeStruct {
+    var firstName = ""
+    var lastName = ""
+    var salaryYear = 0.0
+}
+
+public class EmployeeClass{
+    var firstName = ""
+    var lastName = ""
+    var salaryYear = 0.0
+    
+    var salaryWeek: Double {
+        return self.salaryYear/52
+    }
+}
+
+var ef = EmployeeClass()
+ef.firstName = "Peter"
+ef.lastName = "Zaporowski"
+ef.salaryYear = 52_000
+print(ef.salaryWeek)
+
+class Plant {
+    var height = 0.0
+    var age = 0
+    
+    func growHeight(centimetres: Double){
+        height += centimetres
+    }
+    func getDetails() -> String {
+        return "height: \(height) age: \(age)"
+    }
+}
+
+class Tree: Plant {
+    var limbs = 0
+    func limbGrow() {
+        self.limbs += 1
+    }
+    func limbFall() {
+        self.limbs -= 1
+    }
+    override func getDetails() -> String {
+        let details = super.getDetails()
+        return "\(details) limbs: \(limbs)"
+    }
+}
+var aTree = Tree()
+var aPlant = Plant()
+
+aTree.age = 5
+aTree.height = 4
+
+for index in 1...10 {
+    aTree.limbGrow()
+}
+print(aTree.limbs)
+print(aTree.getDetails())
+print(aPlant.getDetails())
+
+class PineTree: Tree {
+    var needles = 0
+}
+
+class OakTree: Tree {
+    var leaves = 0
+}
+
+//Protocols
+
+protocol FullName {
+    var firstName: String {get set}
+    var lastName: String {get set}
+    func getFullName() -> String
+}
+
+class Scientist: FullName {
+    init() {
+        
+    }
+    var firstName = ""
+    var lastName = ""
+    var field = ""
+    
+    func getFullName() -> String {
+        return "\(firstName) \(lastName) studies \(field)"
+    }
+}
+
+struct FootballPlayer: FullName {
+    init() {
+        
+    }
+    var firstName = ""
+    var lastName = ""
+    var number = 0
+    
+    func getFullName() -> String {
+        return "\(firstName) \(lastName) has the number \(number)"
+    }
+}
+
+var scientist = Scientist()
+scientist.firstName = "Christopher"
+scientist.lastName = "Kulik"
+scientist.field = "Renewable energy sources"
+print(scientist.getFullName())
+
+var player = FootballPlayer()
+player.firstName = "Peter"
+player.lastName = "Zaporowski"
+player.number = 17
+print(player.getFullName())
+
+var person: FullName
+person = scientist
+print(person.getFullName())
+person = player
+print(person.getFullName())
+
+//Extensions
+
+extension String {
+    var firstLetter: Character? {
+        get {
+            return self.characters.first
+        }
+    }
+    
+    func reverse() -> String {
+        var reverse = ""
+        for letter in self.characters {
+            reverse = "\(letter)" + reverse
+        }
+        return reverse
+    }
+}
+
+var myString = "Learning swift is fun"
+//print(myString.reversed()) // Works in Swift 4
+print(myString.reverse())
+print(myString.firstLetter!)
+
+class MyClass {
+    var name = ""
+    init(name: String) {
+        self.name = name
+        print("Initializing class with name \(self.name)")
+    }
+    deinit {
+        print("Releasing class with name \(self.name)")
+    }
+}
+
+var class1ref1: MyClass? = MyClass(name: "One")
+var class2ref1: MyClass? = MyClass(name: "Two")
+var class2ref2: MyClass? = class2ref1
+
+print("Setting class1ref1 to nil")
+class1ref1 = nil
+
+print("Setting class2ref1 to nil")
+class2ref1 = nil
+
+print("Setting class2ref2 to nil")
+class2ref2 = nil
+
+class MyClass1_Strong {
+    var name = ""
+    var class2: MyClass2_Strong?
+    init(name: String) {
+        self.name = name
+        print("Initializing class1_Strong with name \(self.name)")
+    }
+    deinit {
+        print("Releasing class1_Strong with name \(self.name)")
+    }
+}
+
+class MyClass2_Strong {
+    var name = ""
+    var class1: MyClass1_Strong?
+    init(name: String) {
+        self.name = name
+        print("Initializing class2_Strong with name \(self.name)")
+    }
+    deinit {
+        print("Releasing class2_Strong with name \(self.name)")
+    }
+}
+
+var class1: MyClass1_Strong? = MyClass1_Strong(name: "Class1_Strong")
+var class2: MyClass2_Strong? = MyClass2_Strong(name: "Class2_Strong")
+
+class1?.class2 = class2
+class2?.class1 = class1
+
+print("Setting classes to nil")
+class2 = nil
+class1 = nil
+
+
+

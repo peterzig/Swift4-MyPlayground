@@ -620,6 +620,19 @@ struct FootballPlayer: FullName {
     }
 }
 
+struct SwiftProgrammer: FullName {
+    init(firstName: String, lastName: String, birthDate: Date) {
+        
+    }
+    var firstName = ""
+    var lastName = ""
+    var birthDate = 0
+    
+    func getFullName() -> String {
+        return "\(firstName) \(lastName) has birthday \(birthDate)"
+    }
+}
+
 var scientist = Scientist()
 scientist.firstName = "Christopher"
 scientist.lastName = "Kulik"
@@ -719,5 +732,118 @@ print("Setting classes to nil")
 class2 = nil
 class1 = nil
 
+protocol PersonProtocol {
+    var firstName: String { get set }
+    var lastName: String { get set }
+    var birthDate: String { get set }
+    var profession: String { get }
+    init(firstName: String, lastName: String, birthDate: Date)
+}
 
+/*
+func updatePerson(person: PersonProtocol) -> PersonProtocol {
+    
+}
+*/
+var myPerson: PersonProtocol
+var people: [PersonProtocol] = []
 
+//myPerson = SwiftProgrammer(firstName: "Peter", lastName: "Zaporowski", birthDate: "13/02/1996")
+
+protocol DogProtocol {
+    var name: String {get set}
+    var color: String {get set}
+    func speak() -> String
+}
+
+extension DogProtocol {
+    func speak() -> String {
+        return "Woof woof"
+    }
+}
+
+struct JackRussel: DogProtocol {
+    var name: String
+    var color: String
+}
+
+class WhiteLab: DogProtocol {
+    var name: String
+    var color: String
+    init(name: String, color: String){
+        self.name = name
+        self.color = color
+    }
+}
+
+struct Mutt: DogProtocol {
+    var name: String
+    var color: String
+    func speak() -> String {
+        return "I am hungry"
+    }
+}
+
+let dash = JackRussel(name: "Dash", color: "Brown and White")
+let lily = WhiteLab(name: "Lily", color: "White")
+let maple = Mutt(name: "Buddy", color: "Brown")
+let dSpeak = dash.speak()
+let lSpeak = lily.speak()
+let bSpeak = maple.speak()
+
+protocol TextValidating {
+    var regExMatchingString: String {get}
+    var regExFindMatchString: String {get}
+    var validationMessage: String {get}
+    func validateString(str: String)-> Bool
+    func getMatchingString(str: String)-> String?
+}
+
+extension TextValidating {
+    var regExMatchingString: String {
+        get {
+            return regExMatchingString + "$"
+        }
+    }
+    func validateString(str: String) -> Bool {
+        if let _ = str.range(of: regExMatchingString, options: .regularExpression){
+            return true
+        } else {
+            return false
+        }
+    }
+    func getMatchingString(str: String) -> String? {
+        if let newMatch = str.range(of: regExMatchingString, options: .regularExpression){
+            return str.substring(with: newMatch)
+        } else {
+            return nil
+        }
+    }
+
+}
+
+struct AlphaValidation: TextValidating {
+    static let sharedInstance = AlphaValidation()
+    private init() {}
+    let  regExFindMatchString = "^[a-zA-Z]{0,10}"
+    let validationMessage = "Can only contain Alpha characters"
+}
+
+struct AlphaNumericValidation: TextValidating {
+    static let sharedInstance = AlphaNumericValidation()
+    private init() {}
+    let  regExFindMatchString = "^[a-zA-Z0-9]{0,15}"
+    let validationMessage = "Can only contain Alpha Numeric characters"
+}
+
+struct DisplayNameValidation: TextValidating {
+    static let sharedInstance = DisplayNameValidation()
+    private init(){}
+    let regExFindMatchString = "^[\\s?[a-zA-Z0-9\\-_\\s]]{0,15}"
+    let validationMessage = "Can only contain Alphanumeric Characters"
+}
+
+var testString = "abc123"
+var alpha = AlphaValidation.sharedInstance
+alpha.getMatchingString(str: testString)
+alpha.validateString(str: testString)

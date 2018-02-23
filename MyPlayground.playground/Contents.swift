@@ -1057,3 +1057,125 @@ for (index, animal) in animals1.enumerated() {
         print("Animal at \(index) is Sea")
     }
 }
+
+// Error Handling
+
+enum MyError: Error {
+    case Minor
+    case Bad
+    case Terrible(description: String)
+}
+
+enum PlayerNumberError: Error {
+    case NumberTooHigh(desc: String)
+    case NumberTooLow(desc: String)
+    case NumberAlreadyAssigned
+    case NumberDoesNotExist
+}
+
+struct BaseballPlayer: FullName {
+    init() {
+        
+    }
+    var firstName = ""
+    var lastName = ""
+    var number = 0
+    var maxNumber = 99
+    var minNumber = 0
+    
+    func getFullName() -> String {
+        return "\(firstName) \(lastName) has the number \(number)"
+    }
+    mutating func addPlayer(player: BaseballPlayer) throws {
+        guard player.number < maxNumber else {
+            throw PlayerNumberError.NumberTooHigh(desc: "Max number is \(maxNumber)")
+        }
+        guard player.number > minNumber else {
+            throw PlayerNumberError.NumberTooLow(desc: "Min number is \(minNumber)")
+        }
+        guard player.number == nil else {
+            throw PlayerNumberError.NumberDoesNotExist
+        }
+    }
+    func getPlayerByNumber(number: Int) throws -> BaseballPlayer {
+        var players = [BaseballPlayer?] ()
+        if let player = players[number]{
+            return player
+        } else{
+            throw PlayerNumberError.NumberDoesNotExist
+        }
+    }
+}
+
+var myTeam = BaseballPlayer ()
+// var myTeam = [BaseballPlayer] () gives an error :(
+
+do {
+    let player = try myTeam.getPlayerByNumber(number:34)
+    print("Player is \(player.firstName) \(player.lastName)")
+} catch PlayerNumberError.NumberDoesNotExist {
+    print("No player has that number")
+}
+
+
+do {
+//    try myTeam.addPlayer(player: ("Peter", "Zig", 17)) //can't convert value (String, String, Int) to expected argument type 'BaseballPlayer'
+} catch PlayerNumberError.NumberTooHigh(let desc) {
+    print("Error: \(desc)")
+} catch PlayerNumberError.NumberTooHigh(let desc) {
+    print("Error: \(desc)")
+} catch PlayerNumberError.NumberAlreadyAssigned(let desc) {
+    print("Error: Number already assigned")
+}
+
+// use defer to make sure code gets executed no matter how many errors it catches :)
+// "You won't get any errors if you put the whole code in try catch :D"
+func deferFunction() {
+    print("Function started")
+    var str: String?
+    
+    defer {
+        print("In defer block")
+        if let s = str{
+        print("str is \(s)")
+        }
+    }
+    str = "John"
+    print("Function finished")
+}
+
+@available(iOS 9.0, *)
+func testAvailability() {
+    // Function only available for iOS 9 or above
+}
+
+if #available(iOS 9.0, *) {
+    testAvailability()
+} else {
+    // code for earlier versions of iOS
+}
+
+@available(iOS 9.0, *)
+struct TestStruct {
+    // Type only available for iOS 9 or above
+}
+
+// Subscripts
+
+class MyNames {
+    private var names = ["John", "Peter", "Chang", "Chloe"]
+    subscript(index:Int) -> String {
+        get {
+            return names[index]
+        }
+        set {
+            names[index] = newValue
+        }
+    }
+}
+
+var nam = MyNames()
+print(nam[0])
+nam[0] = "Jack"
+print(nam[0])
+
